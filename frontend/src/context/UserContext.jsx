@@ -11,7 +11,6 @@ export const UserProvider = ({ children }) => {
   const [phone, setPhone] = useState("");
   const [otp, setOtp] = useState("");
   const [picture, setPicture] = useState(null);
-  const [isLogoutOpen, setIsLogoutOpen] = useState(false);
 
   const [user, setUser] = useState(() => {
     const savedUser = localStorage.getItem("user");
@@ -21,8 +20,14 @@ export const UserProvider = ({ children }) => {
     setUser(userData.data);
     localStorage.setItem("user", JSON.stringify(userData.data));
     localStorage.setItem("accessToken", userData.accessToken);
+    console.log(userData);
   };
 
+  const logoutUser = () => {
+    setUser(null);
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("user");
+  };
   return (
     <UserContext.Provider
       value={{
@@ -38,11 +43,9 @@ export const UserProvider = ({ children }) => {
         setPicture,
         otp,
         setOtp,
-        isLogoutOpen,
-        setIsLogoutOpen,
         user,
         setUser,
-        loginUser,
+        loginUser,logoutUser
       }}
     >
       {children}

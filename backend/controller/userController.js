@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 import { verifyMail } from "../emailVerify/verifyMail.js";
 import userSchema from "../model/userSchema.js";
 import bcrypt from "bcrypt";
+import sessionSchema from "../model/sessionSchema.js";
 
 export const register = async (req, res) => {
   try {
@@ -71,6 +72,9 @@ export const Login = async (req, res) => {
       });
     }
     if (passwordCheck && user.isVerified === true) {
+      await sessionSchema.findOneAndDelete({ userId: user._id });
+      await sessionSchema.create({userId:user._id});
+
       const accessToken = jwt.sign({ id: user._id }, process.env.secretKey, {
         expiresIn: "30days",
       });
@@ -92,6 +96,37 @@ export const Login = async (req, res) => {
         success: false,
         message: "First complete verification then login",
       });
+    }
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+export const Logout = async (req, res) => {
+  try {
+    const existing=await sessionSchema.findOne({userId:req.userId});
+    const user=await userSchema.findById(req.userId);
+
+    if(existing){
+      await sessionSchema.findOneAndDelete({userId:req.userId});
+
+      user.isLogin=false;
+      await user.save();
+
+      return res.status(200).json({
+        success:true,
+        message:"User logout successfully",
+        data:user,
+      })
+
+    }
+    else{
+      return res.status(400).json({
+        success:false,
+        message:"User has no session",
+      })
     }
   } catch (error) {
     return res.status(500).json({
@@ -140,14 +175,6 @@ export const updateUser = async (req, res) => {
       user.picture = `http://localhost:8001/upload/${req.file.filename}`;
     }
 
-    const passwordCheck = await bcrypt.compare(password, user.password);
-    if (!passwordCheck) {
-      return res.status(404).json({
-        success: false,
-        message: "Incorrect password",
-      });
-    }
-    
     await user.save();
     return res.status(200).json({
       success: true,

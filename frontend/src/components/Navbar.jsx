@@ -2,11 +2,28 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { IoMdSearch, IoMdMenu, IoMdClose } from "react-icons/io";
 import { CgProfile } from "react-icons/cg";
+import axios from "axios";
 import { useUserContext } from "../context/UserContext";
+import { toast } from "react-toastify";
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const { user } = useUserContext();
+  const { user,logoutUser } = useUserContext();
+
+  async function handleLogout() {
+    try {
+      const response = await axios.delete("http://localhost:8001/user/logout", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      });
+      logoutUser();
+      toast.success("User logout successfully");
+    } catch (error) {
+      console.log(error.response?.data.message);
+      toast.error(error.response?.data.message);
+    }
+  }
 
   return (
     <div className="border-2 border-gray-200">
@@ -53,7 +70,6 @@ function Navbar() {
           </Link>
         </div>
 
-        {/* Desktop Right Side */}
         <div className="hidden md:flex items-center gap-4">
           <div className="flex items-center border-2 border-black px-2 rounded-md">
             <input
@@ -66,7 +82,7 @@ function Navbar() {
           {user ? (
             <Link to="/userprofile">
               <img
-                src={user.picture}
+                src={user?.picture|| "/default.png"}
                 alt="profile"
                 className="w-10 h-10 rounded-full object-cover cursor-pointer"
               />
@@ -76,12 +92,18 @@ function Navbar() {
               <CgProfile className="text-4xl cursor-pointer" />
             </Link>
           )}
-          <Link to="/login" className="font-bold text-2xl hover:text-blue-500">
-            Login
-          </Link>
+          {user ? (
+            <button onClick={handleLogout} className="font-bold text-2xl hover:text-blue-500">Logout</button>
+          ) : (
+            <Link
+              to="/login"
+              className="font-bold text-2xl hover:text-blue-500"
+            >
+              Login
+            </Link>
+          )}
         </div>
 
-        {/* Mobile Menu Icon */}
         <div
           className="md:hidden text-3xl cursor-pointer"
           onClick={() => setMenuOpen(!menuOpen)}
