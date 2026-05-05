@@ -41,13 +41,6 @@ function Navbar() {
           </Link>
 
           <Link
-            to="/about"
-            className="text-lg font-semibold text-gray-500 hover:text-black"
-          >
-            About
-          </Link>
-
-          <Link
             to="/admissionform"
             className="text-lg font-semibold text-gray-500 hover:text-black"
           >

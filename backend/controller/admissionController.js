@@ -180,3 +180,18 @@ export const updateAdmission = async (req, res) => {
     });
   }
 };
+
+
+export const pagination=async(req,res)=>{
+  try {
+    const page=Number(page)||1;
+    const limit=Number(limit)||4;
+
+    const skip=(page-1)*limit;
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+}

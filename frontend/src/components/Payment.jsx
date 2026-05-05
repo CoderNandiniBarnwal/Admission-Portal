@@ -18,7 +18,12 @@ function Payment() {
 
       const response = await axios.post(
         `http://localhost:8001/payment/payNow/${userId}`,
-        { cardNumber },
+        { cardNumber },{
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            "Content-Type": "application/json",
+          },
+        },
       );
 
       toast.info("Please wait for 10 seconds...");

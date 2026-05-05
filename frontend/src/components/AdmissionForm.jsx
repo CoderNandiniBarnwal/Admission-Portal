@@ -12,7 +12,12 @@ function AdmissionForm(){
 
   const handleAdmission = async() => {
     try {
-        const response=await axios.post(`http://localhost:8001/admission/applyAdmission/${user._id}`,{course,address});
+        const response=await axios.post(`http://localhost:8001/admission/applyAdmission/${user._id}`,{course,address},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        },);
         setAddress("");
         setCourse("");
         navigate("/");

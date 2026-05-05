@@ -25,8 +25,12 @@ function ShowAdmission() {
     try {
       const response = await axios.get(
         "http://localhost:8001/admission/getAllAdmission",
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        },
       );
-
       setAdmission(response.data.data);
     } catch (error) {
       toast.error(error.response?.data.message);
@@ -37,7 +41,7 @@ function ShowAdmission() {
     fetchadmission();
   }, []);
 
-  const handleUpdate = (id) => {
+  const handleUpdate = (id, course, address) => {
     setSelectedId(id);
     setEditCourse(course);
     setEditAddress(address);
