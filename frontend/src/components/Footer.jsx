@@ -208,7 +208,7 @@ function Footer() {
               />
               <button
                 type="submit"
-                className="bg-yellow-400 hover:bg-pink-500 text-white p-3 rounded-r-md transition"
+                className="bg-yellow-400 text-white p-3 rounded-r-md transition"
               >
                 <i className="fas fa-paper-plane" />
               </button>

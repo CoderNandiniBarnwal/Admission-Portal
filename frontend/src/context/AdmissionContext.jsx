@@ -1,3 +1,4 @@
+import { use } from "react";
 import { createContext, useContext, useState } from "react";
 
 const AdmissionContext = createContext();
@@ -13,6 +14,10 @@ export const AdmissionProvider = ({ children }) => {
 
   const [editCourse, setEditCourse] = useState("");
   const [editAddress, setEditAddress] = useState("");
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+
   return (
     <AdmissionContext.Provider
       value={{
@@ -27,7 +32,15 @@ export const AdmissionProvider = ({ children }) => {
         isEditAdmissionOpen,
         setIsEditAdmissionOpen,
         selectedId,
-        setSelectedId,editCourse, setEditCourse,editAddress, setEditAddress
+        setSelectedId,
+        editCourse,
+        setEditCourse,
+        editAddress,
+        setEditAddress,
+        currentPage,
+        setCurrentPage,
+        totalPages,
+        setTotalPages,
       }}
     >
       {children}

@@ -1,5 +1,5 @@
 import express from "express";
-import { applyAdmission, deleteAdmission, getAdmissionById, getAllAdmission, updateAdmission } from "../controller/admissionController.js";
+import { applyAdmission, deleteAdmission, getAdmissionById, getAllAdmission, pagination, updateAdmission } from "../controller/admissionController.js";
 import { admissionValidate, admissionValidationSchema } from "../validators/admissionValidation.js";
 import { hasToken } from "../middleware/hasToken.js";
 
@@ -9,5 +9,6 @@ admissionRoute.get("/getAdmissionById/:id",hasToken,getAdmissionById);
 admissionRoute.get("/getAllAdmission",hasToken,getAllAdmission);
 admissionRoute.delete("/deleteAdmission/:id",hasToken,deleteAdmission);
 admissionRoute.put("/updateAdmission/:id",admissionValidate(admissionValidationSchema),hasToken,updateAdmission);
+admissionRoute.get("/paginateAdmission",hasToken,pagination);
 
 export default admissionRoute;
